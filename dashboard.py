@@ -26,7 +26,8 @@ min_date = master_df["order_purchase_timestamp"].min().date()
 max_date = master_df["order_purchase_timestamp"].max().date()
 
 with st.sidebar:
-    st.image("https://github.com", width=200)
+    st.markdown("## **E-Commerce App** 🛒")
+    st.markdown("---")
     st.markdown("### Filter Rentang Analisis")
     date_range = st.date_input(
         label='Tentukan Rentang Waktu Transaksi:',
