@@ -28,16 +28,21 @@ max_date = master_df["order_purchase_timestamp"].max().date()
 with st.sidebar:
     st.image("https://github.com", width=200)
     st.markdown("### Filter Rentang Analisis")
-    start_date, end_date = st.date_input(
+    date_range = st.date_input(
         label='Tentukan Rentang Waktu Transaksi:',
         min_value=min_date,
         max_value=max_date,
         value=[min_date, max_date]
     )
 
-# Filter Data Berdasarkan Range Waktu Sidebar secara Real-time
-filtered_df = master_df[(master_df["order_purchase_timestamp"].dt.date >= start_date) & 
-                        (master_df["order_purchase_timestamp"].dt.date <= end_date)]
+# Memastikan user sudah memilih sepasang tanggal (Mulai & Selesai) sebelum memfilter DataFrame
+if isinstance(date_range, (list, tuple)) and len(date_range) == 2:
+    start_date, end_date = date_range
+    filtered_df = master_df[(master_df["order_purchase_timestamp"].dt.date >= start_date) & 
+                            (master_df["order_purchase_timestamp"].dt.date <= end_date)]
+else:
+    # Jika user baru mengeklik satu tanggal, gunakan seluruh data penuh sementara agar tidak crash
+    filtered_df = master_df.copy()
 
 # 4. Membuat Rangkuman Metrik Utama (KPI) di Bagian Atas
 st.markdown("### Ringkasan Performa Bisnis")
@@ -54,7 +59,7 @@ st.markdown("---")
 
 # 5. LAYOUT TAB UTAMA (Menggunakan Kombinasi Teks Emoji yang Kompatibel)
 tab1, tab2, tab3 = st.tabs([
-    "📈 Performa Finansial Produk", 
+    "增 Performa Finansial Produk", 
     "👥 Segmentasi Perilaku Pelanggan (RFM)", 
     "🌍 Analisis Geospasial Wilayah"
 ])
